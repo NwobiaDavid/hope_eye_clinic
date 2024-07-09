@@ -20,6 +20,5 @@ const ItemBought = sequelize.define('ItemBought', {
 
 // Correct the association definition
 ItemBought.belongsTo(Patient, { foreignKey: 'patient_id' });
-ItemBought.belongsTo(Item, { foreignKey: 'item_id' });
 
 module.exports = ItemBought;

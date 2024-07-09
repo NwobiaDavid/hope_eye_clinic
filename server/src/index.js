@@ -5,6 +5,7 @@ const PatientsRouter  = require('./routes/PatientsRouter');
 const ConsultationsRouter  = require('./routes/ConsultationRoutes');
 const AppointmentRouter  = require('./routes/AppointmentRoutes');
 const TestRouter  = require('./routes/TestRoutes');
+const SurgRouter  = require('./routes/SurgRoutes');
 const CartRouter  = require('./routes/Cart');
 
 const app = express();
@@ -44,7 +45,7 @@ app.get('/', (req, res) => {
 });
 
 // app.use('/api/patients', PatientsRouter);
-app.use('/api', PatientsRouter, ConsultationsRouter, AppointmentRouter, TestRouter, CartRouter); 
+app.use('/api', PatientsRouter, ConsultationsRouter,SurgRouter, AppointmentRouter, TestRouter, CartRouter); 
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}...`);

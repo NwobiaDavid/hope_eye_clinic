@@ -74,7 +74,7 @@ const PatientDetailsPage = () => {
             <AppointmentComp id={id} />
           </div>
           <div>
-            <CartComponent/>
+            <CartComponent  id={id} />
           </div>
           <div className="border-t">
             <TestComp id={id} />

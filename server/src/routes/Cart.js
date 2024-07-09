@@ -10,8 +10,8 @@ const {
 const router = express.Router();
 
 router.post('/cart', addToCart);
-router.post('/items', fetchItems);
-router.post('/drugs', fetchDrugs);
+router.get('/items', fetchItems);
+router.get('/drugs', fetchDrugs);
 router.post('/checkout', checkout);
 router.get('/purchases', getPurchases);
 

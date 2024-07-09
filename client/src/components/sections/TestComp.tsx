@@ -46,7 +46,7 @@ interface TestCompProps {
 const TestComp: React.FC<TestCompProps> = ({id}) => {
     const [docname, setDocname] = useState<string>('');
     const [date, setDate] = useState<Date>()
-    const [time, setTime] = useState<string>('');
+    const [time, setTime] = useState<string>('Eye');
     const [type, setType] = useState<string>('');
     const [newStatus, setNewStatus] = useState<'AM' | 'PM'>('AM');
     const [data, setData] = useState<Test[]>([]);

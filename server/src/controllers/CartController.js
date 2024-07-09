@@ -47,7 +47,8 @@ exports.checkout = async (req, res) => {
                 drug_name: drug.drug_name,
                 quantity: drug.quantity,
                 purchase_date: new Date(),
-                patient_id: drug.patient_id
+                patient_id: drug.patient_id,
+                drug_id: drug.drug_id
             })
         );
 
@@ -56,7 +57,8 @@ exports.checkout = async (req, res) => {
                 item_name: item.item_name,
                 quantity: item.quantity,
                 purchase_date: new Date(),
-                patient_id: item.patient_id
+                patient_id: item.patient_id,
+                item_id: item.item_id
             })
         );
 
@@ -81,6 +83,7 @@ exports.getPurchases = async (req, res) => {
 
         res.status(200).json({ drugsBought, itemsBought });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch purchases.' });
+        console.error('Error fetching purchases:', error);  // Detailed logging
+        res.status(500).json({ error: 'Failed to fetch purchases.', details: error.message });
     }
 };

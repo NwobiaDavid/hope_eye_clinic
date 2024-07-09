@@ -54,7 +54,7 @@ exports.updateTest = async (req, res) => {
         if (test) {
             test.test_date = test_date;
             test.doctor_name = doctor_name;
-            test.reason = reason;
+            test.type = type;
             await test.save();
             res.status(200).json(test);
         } else {

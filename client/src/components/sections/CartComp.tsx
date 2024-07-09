@@ -104,7 +104,7 @@ const CartComponent = ({id}) => {
             const response = await axios.get(`http://localhost:3000/api/purchases?patient_id=${patientId}`);
             setPurchases(response.data);
         } catch (error) {
-            console.error(error.response.data.error);
+            console.error(error);
         }
     };
 
@@ -130,9 +130,9 @@ const CartComponent = ({id}) => {
                             onChange={handleDrugSearch}
                         />
                         {drugSearchResults.length > 0 && (
-                            <ul>
+                            <ul className=' text-base w-[50%] bg-neutral-400 mb-2 rounded-md ' >
                                 {drugSearchResults.map((drug, index) => (
-                                    <li key={index} onClick={() => setDrugName(drug.name)}>
+                                    <li className=' p-1 hover:font-semibold duration-200 cursor-pointer ' key={index} onClick={() => setDrugName(drug.name)}>
                                         {drug.name}
                                     </li>
                                 ))}
@@ -157,9 +157,9 @@ const CartComponent = ({id}) => {
                             onChange={handleItemSearch}
                         />
                         {itemSearchResults.length > 0 && (
-                            <ul>
+                            <ul className=' text-base w-[50%] bg-neutral-400 mb-2 rounded-md ' >
                                 {itemSearchResults.map((item, index) => (
-                                    <li key={index} onClick={() => setItemName(item.name)}>
+                                    <li className=' p-1 hover:font-semibold duration-200 cursor-pointer ' key={index} onClick={() => setItemName(item.name)}>
                                         {item.name}
                                     </li>
                                 ))}
@@ -207,7 +207,7 @@ const CartComponent = ({id}) => {
                         <h3 className='font-semibold' >Drugs Bought</h3>
                         <ul>
                             {purchases.drugsBought ? purchases.drugsBought.map((drug, index) => (
-                                <li key={index}>{drug.drug_name} - Quantity: {drug.quantity} - Date: {new Date(drug.purchase_date).toLocaleDateString()}</li>
+                                <li className=' text-lg ' key={index}>{drug.drug_name} - Quantity: {drug.quantity} - Date: {new Date(drug.purchase_date).toLocaleDateString()}</li>
                             )) : (
                                 <h2 className='text-base capitalize opacity-70' > no drug purchase yet </h2>
                             ) }
@@ -218,9 +218,9 @@ const CartComponent = ({id}) => {
                         <h3  className='font-semibold' >Items Bought</h3>
                         <ul>
                             {purchases.itemsBought ? purchases.itemsBought.map((item, index) => (
-                                <li key={index}>{item.item_name} - Quantity: {item.quantity} - Date: {new Date(item.purchase_date).toLocaleDateString()}</li>
+                                <li className=' text-lg ' key={index}>{item.item_name} - Quantity: {item.quantity} - Date: {new Date(item.purchase_date).toLocaleDateString()}</li>
                             )) : (
-                                <h2 className='text-base capitalize opacity-70' > no drug purchase yet </h2>
+                                <h2 className='text-base capitalize opacity-70' > no item purchase yet </h2>
                             )}
                         </ul>
                     </div>

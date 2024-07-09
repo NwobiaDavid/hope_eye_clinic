@@ -20,6 +20,5 @@ const DrugBought = sequelize.define('DrugBought', {
 });
 
 DrugBought.belongsTo(Patient, { foreignKey: 'patient_id' });
-DrugBought.belongsTo(Drug, { foreignKey: 'drug_id' });
 
 module.exports = DrugBought;
