@@ -9,6 +9,10 @@ const DashboardPage = () => {
 
   const pages = [
     {
+      link: "/patients",
+      label: "patients"
+    },
+    {
       link: "/appointments",
       label: "appointments"
     },
@@ -32,10 +36,7 @@ const DashboardPage = () => {
       link: "/store-inventory",
       label: "store inventory"
     },
-    {
-      link: "/history",
-      label: "record history"
-    },
+    
   ];
 
   const printForm = () => {
