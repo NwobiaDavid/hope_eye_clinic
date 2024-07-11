@@ -32,6 +32,18 @@ const Patient = sequelize.define('Patient', {
     note: {
         type: DataTypes.TEXT,
     },
+    next_of_kin_name: {
+        type: DataTypes.STRING,
+    },
+    next_of_kin_number: {
+        type: DataTypes.STRING,
+    },
+    next_of_kin_relationship: {
+        type: DataTypes.STRING,
+    },
+    next_of_kin_address: {
+        type: DataTypes.STRING,
+    },
     created_at: {
         type: DataTypes.DATE,
         defaultValue: DataTypes.NOW,

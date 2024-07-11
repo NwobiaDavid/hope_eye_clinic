@@ -2,14 +2,31 @@ const Consultation = require('../models/ConsultationModel');
 
 // Get all consultations for a specific patient
 exports.getConsultations = async (req, res) => {
+    const { patient_id } = req.query;
     try {
-        const { patient_id } = req.query;
-        const consultations = await Consultation.findAll({ where: { patient_id } });
-        res.json(consultations);
+        const consultations = await Consultation.findAll({ where:  patient_id ? { patient_id: patient_id  } : {} });
+        res.status(200).json(consultations);
     } catch (error) {
         res.status(500).json({ message: 'Error fetching consultations', error });
     }
 };
+
+
+exports.getConsultationById = async (req, res) => {
+    const { id } = req.params;
+
+    try {
+        const consultation = await Consultation.findByPk(id);
+        if (consultation) {
+            res.status(200).json(consultation);
+        } else {
+            res.status(404).json({ error: 'consultation not found.' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch consultation.' });
+    }
+};
+
 
 // Create a new consultation
 exports.createConsultation = async (req, res) => {

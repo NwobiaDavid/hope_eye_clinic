@@ -22,6 +22,8 @@ exports.addToCart = (req, res) => {
     res.status(200).json({ message: `${type} added to cart.` });
 };
 
+
+
 exports.fetchItems = async (req, res) => {
     try {
         const items = await Item.findAll();
@@ -31,6 +33,44 @@ exports.fetchItems = async (req, res) => {
     }
 };
 
+exports.updateItem = async (req, res) => {
+    const { id } = req.params;
+    const { name, amount, price, manufacturer } = req.body;
+
+    try {
+        const item = await Item.findByPk(id);
+        if (item) {
+            item.name = name;
+            item.manufacturer = manufacturer;
+            item.amount = amount;
+            item.price = price;
+            await item.save();
+            res.status(200).json(item);
+        } else {
+            res.status(404).json({ error: 'Item not found.' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to update item.' });
+    }
+};
+
+
+exports.deleteItem = async (req, res) => {
+    const {id} = req.params;
+
+    try {
+        const item = await Item.findByPk(id);
+        if (item) {
+            await item.destroy();
+            res.status(204).json({ message: 'Item deleted successfully.' });
+        } else {
+            res.status(404).json({ error: 'Item not found.' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to delete item.' });
+    }
+}
+
 exports.fetchDrugs = async (req, res) => {
     try {
         const drugs = await Drug.findAll();
@@ -39,6 +79,78 @@ exports.fetchDrugs = async (req, res) => {
         res.status(500).json({ error: 'Failed to fetch drugs.' });
     }
 };
+
+exports.createItem = async (req, res) => {
+    const 
+    {amount, price, manufacturer, name} = req.body;
+
+    try {
+        const newItem = await Drug.create({
+            amount,
+            price,
+            name,
+            manufacturer
+        })
+        res.status(200).json(newItem);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch items.' });
+    }
+};
+
+exports.updateDrug = async (req, res) => {
+    const { id } = req.params;
+    const { name, amount, price, manufacturer } = req.body;
+
+    try {
+        const drug = await Drug.findByPk(id);
+        if (drug) {
+            drug.name = name;
+            drug.manufacturer = manufacturer;
+            drug.amount = amount;
+            drug.price = price;
+            await drug.save();
+            res.status(200).json(drug);
+        } else {
+            res.status(404).json({ error: 'Drug not found.' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to update drug.' });
+    }
+};
+
+exports.deleteDrug = async (req, res) => {
+    const {id} = req.params;
+
+    try {
+        const drug = await Drug.findByPk(id);
+        if (drug) {
+            await drug.destroy();
+            res.status(204).json({ message: 'Drug deleted successfully.' });
+        } else {
+            res.status(404).json({ error: 'Drug not found.' });
+        }
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to delete drug.' });
+    }
+}
+
+exports.createDrug = async (req, res) => {
+    const 
+    {amount, price, manufacturer, name} = req.body;
+
+    try {
+        const newDrug = await Drug.create({
+            amount,
+            price,
+            name,
+            manufacturer
+        })
+        res.status(200).json(newDrug);
+    } catch (error) {
+        res.status(500).json({ error: 'Failed to fetch drugs.' });
+    }
+};
+
 
 exports.checkout = async (req, res) => {
     try {

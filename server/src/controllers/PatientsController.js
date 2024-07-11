@@ -16,8 +16,8 @@ const getAllPatients = async (req, res) => {
 // Register a new patient
 const registerPatient = async (req, res) => {
     try {
-        const { firstName, lastName, gender, age, phoneNumber, regStatus, address } = req.body;
-        const newPatient = await Patient.create({  firstName, lastName, gender, age, phoneNumber, regStatus, address });
+        const { firstName, lastName, gender, age, phoneNumber, regStatus, address, next_of_kin_name, next_of_kin_number, next_of_kin_relationship, next_of_kin_address } = req.body;
+        const newPatient = await Patient.create({  firstName, lastName, gender, age, phoneNumber, regStatus, address, next_of_kin_name, next_of_kin_number, next_of_kin_relationship, next_of_kin_address });
         res.status(201).json(newPatient);
     } catch (error) {
         res.status(500).json({ error: error.message });
@@ -40,7 +40,7 @@ const getPatientById = async (req, res) => {
 
 const updatePatient = async (req, res) => {
     const { id } = req.params;
-    const { firstName, lastName, gender, age, address, phoneNumber, regStatus } = req.body;
+    const { firstName, lastName, gender, age, address, phoneNumber, regStatus, next_of_kin_name, next_of_kin_number, next_of_kin_relationship, next_of_kin_address } = req.body;
   
     if (!firstName || !lastName || !gender || !age || !address || !phoneNumber || !regStatus) {
       return res.status(400).json({ message: "All fields are required" });
@@ -50,7 +50,7 @@ const updatePatient = async (req, res) => {
   
     try {
       const [updated] = await Patient.update(
-        { firstName, lastName, gender, age, address, phoneNumber, regStatus },
+        { firstName, lastName, gender, age, address, phoneNumber, regStatus, next_of_kin_name, next_of_kin_number, next_of_kin_relationship, next_of_kin_address },
         { where: { id } }
       );
   

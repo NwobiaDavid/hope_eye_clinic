@@ -1,4 +1,4 @@
-import { SetStateAction, useState , useEffect} from 'react';
+import { SetStateAction, useState, useEffect } from 'react';
 import { Button } from "../components/ui/button";
 import { Menu, Plus, Printer } from "lucide-react";
 import {
@@ -34,106 +34,111 @@ import { Input } from "../components/ui/input"
 import { Label } from "../components/ui/label"
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
-import {format} from "date-fns";
+import { format } from "date-fns";
 
 const PatientPages = () => {
-    const navigate = useNavigate();
+  const navigate = useNavigate();
 
-    const [data, setData] = useState([]);
-    const [newName, setNewName] = useState("");
-    const [newSurname, setNewSurname] = useState("");
-    const [newStatus, setNewStatus] = useState("Not Paid");
-    const [newGender, setNewGender] = useState("Male");
-    const [newAge, setNewAge] = useState("");
-    const [newPhonenumber, setNewPhonenumber] = useState("");
-    const [newAddress, setNewAddress] = useState("");
-    const [selectedPatient, setSelectedPatient] = useState(null);
-  
-    useEffect(() => {
-      fetchPatients();
-    }, []);
+  const [data, setData] = useState([]);
+  const [newName, setNewName] = useState("");
+  const [newSurname, setNewSurname] = useState("");
+  const [newStatus, setNewStatus] = useState("Not Paid");
+  const [newGender, setNewGender] = useState("Male");
+  const [newAge, setNewAge] = useState("");
+  const [newPhonenumber, setNewPhonenumber] = useState("");
+  const [newAddress, setNewAddress] = useState("");
+  const [selectedPatient, setSelectedPatient] = useState(null);
 
-    // const { format } = require('date-fns');
+  const [nextName, setNextName] = useState("");
+  const [nextNumber, setNextNumber] = useState("")
+  const [nextRelationship, setNextRelationship] = useState("")
+  const [nextAddress, setNextAddress] = useState("")
 
-const formatDate = (isoDate: string | number | Date) => {
+  useEffect(() => {
+    fetchPatients();
+  }, []);
+
+  // const { format } = require('date-fns');
+
+  const formatDate = (isoDate: string | number | Date) => {
     return format(new Date(isoDate), 'MMMM dd, yyyy HH:mm:ss');
-};
-  
-    const fetchPatients = async () => {
-      try {
-        const response = await axios.get('http://localhost:3000/api/patients');
-        // const patients = await response.json();
-        setData(response.data);
-        console.log("my data-- "+JSON.stringify(response.data))
-      } catch (error) {
-        console.error("Error fetching patients:", error);
-      }
-    };
-  
-    const handleStatusChange = async (index: number, newStatus: string) => {
-      const updatedPatient = { ...data[index], regStatus: newStatus };
-      try {
-        await axios.put(`http://localhost:3000/api/patients/${data[index].id}`, updatedPatient );
-        const updatedData = data.map((item, i) => (i === index ? updatedPatient : item));
-        setData(updatedData);
-      } catch (error) {
-        console.error("Error updating patient status:", error);
-      }
-    };
-  
-    const handleNewStatusChange = (newStatus: SetStateAction<string>) => {
-      setNewStatus(newStatus);
-    };
-  
-    const handleNewGenderChange = (newGender: SetStateAction<string>) => {
-      setNewGender(newGender);
-    };
-  
-    const addPatient = async () => {
-      const newPatient = {
-        firstName: newName,
-        lastName: newSurname,
-        gender: newGender,
-        age: newAge,
-        address: newAddress,
-        phoneNumber: newPhonenumber,
-        regStatus: newStatus
-      };
-  
-      try {
-        const response = await axios.post('http://localhost:3000/api/newpatients',
-             newPatient );
+  };
 
-        const createdPatient = response.data;
-        console.log("new patient created == "+ JSON.stringify(response.data))
-        setData([...data, createdPatient]);
-        setNewName("");
-        setNewSurname("");
-        setNewStatus("Open");
-        setNewGender("Gender");
-        setNewAge("");
-        setNewPhonenumber("");
-        setNewAddress("");
-      } catch (error) {
-        console.error("Error adding new patient:", error);
-      }
+  const fetchPatients = async () => {
+    try {
+      const response = await axios.get('http://localhost:3000/api/patients');
+      // const patients = await response.json();
+      setData(response.data);
+      console.log("my data-- " + JSON.stringify(response.data))
+    } catch (error) {
+      console.error("Error fetching patients:", error);
+    }
+  };
+
+  const handleStatusChange = async (index: number, newStatus: string) => {
+    const updatedPatient = { ...data[index], regStatus: newStatus };
+    try {
+      await axios.put(`http://localhost:3000/api/patients/${data[index].id}`, updatedPatient);
+      const updatedData = data.map((item, i) => (i === index ? updatedPatient : item));
+      setData(updatedData);
+    } catch (error) {
+      console.error("Error updating patient status:", error);
+    }
+  };
+
+  const handleNewStatusChange = (newStatus: SetStateAction<string>) => {
+    setNewStatus(newStatus);
+  };
+
+  const handleNewGenderChange = (newGender: SetStateAction<string>) => {
+    setNewGender(newGender);
+  };
+
+  const addPatient = async () => {
+    const newPatient = {
+      firstName: newName,
+      lastName: newSurname,
+      gender: newGender,
+      age: newAge,
+      address: newAddress,
+      phoneNumber: newPhonenumber,
+      regStatus: newStatus
     };
-  
-    const viewDetails = (patient: never) => {
-      navigate(`/patients/${patient.id}`, { state: { patient } });
-    };
-  
-    const editRecord = (patient: SetStateAction<null>) => {
-      setSelectedPatient(patient);
-      const [firstName, ...rest] = patient.fullname.split(" ");
-      setNewName(firstName);
-      setNewSurname(rest.join(" "));
-      setNewGender(patient.gender);
-      setNewAge(patient.age);
-      setNewPhonenumber(patient.phonenumber);
-      setNewAddress(patient.address);
-      setNewStatus(patient.status);
-    };
+
+    try {
+      const response = await axios.post('http://localhost:3000/api/newpatients',
+        newPatient);
+
+      const createdPatient = response.data;
+      console.log("new patient created == " + JSON.stringify(response.data))
+      setData([...data, createdPatient]);
+      setNewName("");
+      setNewSurname("");
+      setNewStatus("Open");
+      setNewGender("Gender");
+      setNewAge("");
+      setNewPhonenumber("");
+      setNewAddress("");
+    } catch (error) {
+      console.error("Error adding new patient:", error);
+    }
+  };
+
+  const viewDetails = (patient: never) => {
+    navigate(`/patients/${patient.id}`, { state: { patient } });
+  };
+
+  const editRecord = (patient: SetStateAction<null>) => {
+    setSelectedPatient(patient);
+    const [firstName, ...rest] = patient.fullname.split(" ");
+    setNewName(firstName);
+    setNewSurname(rest.join(" "));
+    setNewGender(patient.gender);
+    setNewAge(patient.age);
+    setNewPhonenumber(patient.phonenumber);
+    setNewAddress(patient.address);
+    setNewStatus(patient.status);
+  };
 
 
   const printForm = () => {
@@ -206,8 +211,8 @@ const formatDate = (isoDate: string | number | Date) => {
         <div className=' w-[80%] ' >
           <div className="flex justify-between py-4 items-center">
             <h2 className="py-2 px-4 bg-black text-white rounded-md">Patients</h2>
-<div className='flex ' >
-  
+            <div className='flex ' >
+
               <Dialog>
                 <DialogTrigger>
                   <Button className="flex justify-center">
@@ -223,49 +228,57 @@ const formatDate = (isoDate: string | number | Date) => {
                   </DialogHeader>
                   <div className="grid gap-4 py-4">
                     <div className='grid grid-cols-2 gap-3 '>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="firstname" className="text-right">
-                          First Name
-                        </Label>
-                        <Input
-                          id="firstname"
-                          onChange={(e) => setNewName(e.target.value)}
-                          value={newName}
-                          className="col-span-3"
-                        />
+                      <div className="grid grid-cols-1 items-center gap-4">
+                        <div>
+                          <Label htmlFor="firstname" className="text-right">
+                            First Name
+                          </Label>
+                          <Input
+                            id="firstname"
+                            onChange={(e) => setNewName(e.target.value)}
+                            value={newName}
+                            className="col-span-3"
+                          />
+                        </div>
                       </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="surname" className="whitespace-nowrap text-right">
-                          Surname
-                        </Label>
-                        <Input
-                          id="surname"
-                          value={newSurname}
-                          onChange={(e) => setNewSurname(e.target.value)}
-                          className="col-span-3"
-                        />
+                      <div className="grid grid-cols-1 items-center gap-4">
+                        <div>
+                          <Label htmlFor="surname" className="whitespace-nowrap text-right">
+                            Surname
+                          </Label>
+                          <Input
+                            id="surname"
+                            value={newSurname}
+                            onChange={(e) => setNewSurname(e.target.value)}
+                            className="col-span-3"
+                          />
+                        </div>
                       </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="phonenumber" className="text-right">
-                          Phone Number
-                        </Label>
-                        <Input
-                          id="phonenumber"
-                          value={newPhonenumber}
-                          onChange={(e) => setNewPhonenumber(e.target.value)}
-                          className="col-span-3"
-                        />
+                      <div className="grid grid-cols-1 items-center gap-4">
+                        <div>
+                          <Label htmlFor="phonenumber" className="text-right">
+                            Phone Number
+                          </Label>
+                          <Input
+                            id="phonenumber"
+                            value={newPhonenumber}
+                            onChange={(e) => setNewPhonenumber(e.target.value)}
+                            className="col-span-3"
+                          />
+                        </div>
                       </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="address" className="whitespace-nowrap text-right">
-                          Address
-                        </Label>
-                        <Input
-                          id="address"
-                          value={newAddress}
-                          onChange={(e) => setNewAddress(e.target.value)}
-                          className="col-span-3"
-                        />
+                      <div className="grid grid-cols-1 items-center gap-4">
+                        <div>
+                          <Label htmlFor="address" className="whitespace-nowrap text-right">
+                            Address
+                          </Label>
+                          <Input
+                            id="address"
+                            value={newAddress}
+                            onChange={(e) => setNewAddress(e.target.value)}
+                            className="col-span-3"
+                          />
+                        </div>
                       </div>
                       <div className="w-full grid gap-4 grid-cols-4 text-center justify-center border-2 border-slate-400 bg-slate-300 items-center rounded-lg px-2">
                         <Label htmlFor="surname" className="text-right whitespace-nowrap capitalize ">
@@ -273,16 +286,18 @@ const formatDate = (isoDate: string | number | Date) => {
                         </Label>
                         <div className="w-full col-span-3 text-center flex justify-center font-semibold p-2">3000</div>
                       </div>
-                      <div className="grid grid-cols-4 items-center gap-4">
-                        <Label htmlFor="age" className="whitespace-nowrap text-right">
-                          Age
-                        </Label>
-                        <Input
-                          id="age"
-                          value={`${newAge}`}
-                          onChange={(e) => setNewAge(e.target.value)}
-                          className="col-span-3"
-                        />
+                      <div className="grid grid-cols-1 items-center gap-4">
+                        <div>
+                          <Label htmlFor="age" className="whitespace-nowrap text-right">
+                            Age
+                          </Label>
+                          <Input
+                            id="age"
+                            value={`${newAge}`}
+                            onChange={(e) => setNewAge(e.target.value)}
+                            className="col-span-3"
+                          />
+                        </div>
                       </div>
                     </div>
                     <div className='grid grid-cols-2'>
@@ -307,7 +322,7 @@ const formatDate = (isoDate: string | number | Date) => {
                           Reg Status
                         </Label>
                         <DropdownMenu>
-                          <DropdownMenuTrigger className="border p-2 rounded-lg">
+                          <DropdownMenuTrigger className="border col-span-3 p-2 w-full rounded-lg">
                             {newStatus}
                           </DropdownMenuTrigger>
                           <DropdownMenuContent>
@@ -319,6 +334,66 @@ const formatDate = (isoDate: string | number | Date) => {
                         </DropdownMenu>
                       </div>
                     </div>
+
+                    <div  className='grid grid-cols-2 gap-5 ' >
+
+                      <div className="grid grid-cols-1 items-center gap-4">
+                        <div>
+                          <Label htmlFor="nextName" className="whitespace-nowrap text-right">
+                            Next of Kin's Name
+                          </Label>
+                          <Input
+                            id="nextName"
+                            value={`${nextName}`}
+                            onChange={(e) => setNextName(e.target.value)}
+                            className="col-span-3"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 items-center gap-4">
+                        <div>
+                          <Label htmlFor="nextNumber" className="whitespace-nowrap text-right">
+                            Next of Kin's Number
+                          </Label>
+                          <Input
+                            id="nextNumber"
+                            value={`${nextNumber}`}
+                            onChange={(e) => setNextNumber(e.target.value)}
+                            className="col-span-3"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 items-center gap-4">
+                        <div>
+                          <Label htmlFor="nextRelationship" className="whitespace-nowrap text-right">
+                            Next of Kin's Relationship
+                          </Label>
+                          <Input
+                            id="nextRelationship"
+                            value={`${nextRelationship}`}
+                            onChange={(e) => setNextRelationship(e.target.value)}
+                            className="col-span-3"
+                          />
+                        </div>
+                      </div>
+
+                      <div className="grid grid-cols-1 items-center gap-4">
+                        <div>
+                          <Label htmlFor="nextName" className="whitespace-nowrap text-right">
+                            Next of Kin's Address
+                          </Label>
+                          <Input
+                            id="nextAddress"
+                            value={`${nextAddress}`}
+                            onChange={(e) => setNextAddress(e.target.value)}
+                            className="col-span-3"
+                          />
+                        </div>
+                      </div>
+
+                    </div>
                   </div>
                   <DialogFooter>
                     <Button type="button" onClick={addPatient}>Save changes</Button>
@@ -326,9 +401,9 @@ const formatDate = (isoDate: string | number | Date) => {
                 </DialogContent>
               </Dialog>
               <Button className="flex ml-2 justify-center" onClick={printForm}>
-                  <Printer /> <span className="ml-2">Print Receipt</span>
-                </Button>
-</div>
+                <Printer /> <span className="ml-2">Print Receipt</span>
+              </Button>
+            </div>
           </div>
 
           <div className='flex justify-center items-center'>
