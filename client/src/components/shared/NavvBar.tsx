@@ -16,6 +16,10 @@ const NavvBar = () => {
 
     // location.pathname
     const routes = [
+        {
+            link: "/patients",
+            label: "patients"
+        },
  {
             link: "/appointments",
             label: "appointments"

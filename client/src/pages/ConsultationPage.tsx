@@ -119,8 +119,8 @@ const ConsultationPage = () => {
         setNewName(name);
     };
 
-    const handleSearch = (event: React.FormEvent) => {
-        event.preventDefault();
+    const handleSearch = () => {
+        // event.preventDefault();
         if (patients.length > 0) {
             const results = patients.filter(patient => {
                 const name = `${patient?.firstName?.toLowerCase()} ${patient?.lastName?.toLowerCase()}`;
@@ -131,7 +131,7 @@ const ConsultationPage = () => {
     };
 
     const addConsult = async () => {
-        if (!selectedPatient || !newSurname || !date || !time || !reason) {
+        if (!selectedPatient || !newSurname || !date || !time || !prescription || !diagnosis) {
             return;
         }
 
@@ -208,116 +208,135 @@ const ConsultationPage = () => {
                                     This action cannot be undone.
                                 </DialogDescription>
                             </DialogHeader>
-                            <div className="grid gap-4 py-4">
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="patientName" className="text-right">
-                                        Patient Name
-                                    </Label>
-                                    <Input
-                                        id="patientName"
-                                        onChange={(e) => { setNewName(e.target.value); handleSearch(e) }}
-                                        value={newName}
-                                        className="col-span-3"
-                                    />
-                                    <div>
-                                        {searchResults && (
-                                            <div className="mt-4">
-                                                {searchResults.length > 0 ? (
-                                                    <ul>
-                                                        {searchResults.map((patient) => (
-                                                            <li key={patient.id} className='py-2 text-center capitalize cursor-pointer px-3 border hover:bg-gray-100 duration-200 rounded-lg mb-2' onClick={() => handleSelectPatient(patient)}>
-                                                                {patient.firstName + " " + patient.lastName}
-                                                            </li>
-                                                        ))}
-                                                    </ul>
-                                                ) : (
-                                                    <p>No patients found</p>
-                                                )}
-                                            </div>
-                                        )}
+                            <div className="grid grid-cols-2 gap-4 py-4">
+                                <div>
+                                    <div className="grid grid-cols-1 items-center gap-4">
+                                        <div>
+                                            <Label htmlFor="patientName" className="text-right">
+                                                Patient Name
+                                            </Label>
+                                            <Input
+                                                id="patientName"
+                                                onChange={(e) => { setNewName(e.target.value); handleSearch() }}
+                                                value={newName}
+                                                className="col-span-3"
+                                            />
+                                        </div>
+                                        <div className="w-full " >
+                                            {searchResults && (
+                                                <div className="mt-4 w-full ">
+                                                    {searchResults.length > 0 ? (
+                                                        <div>
+                                                            {searchResults.map((patient) => (
+                                                                <div key={patient.id} className='py-2 text-center w-full capitalize cursor-pointer px-3 border hover:bg-gray-100 duration-200 rounded-lg mb-2' onClick={() => handleSelectPatient(patient)}>
+                                                                    {patient.firstName + " " + patient.lastName}
+                                                                </div>
+                                                            ))}
+                                                        </div>
+                                                    ) : (
+                                                        <p>No patients found</p>
+                                                    )}
+                                                </div>
+                                            )}
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 items-center gap-4">
+                                        <div>
+                                            <Label htmlFor="doctorName" className="text-right">
+                                                Doctor Name
+                                            </Label>
+                                            <Input
+                                                id="doctorName"
+                                                value={newSurname}
+                                                onChange={(e) => setNewSurname(e.target.value)}
+                                                className="col-span-3"
+                                            />
+                                        </div>
                                     </div>
                                 </div>
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="doctorName" className="text-right">
-                                        Doctor Name
-                                    </Label>
-                                    <Input
-                                        id="doctorName"
-                                        value={newSurname}
-                                        onChange={(e) => setNewSurname(e.target.value)}
-                                        className="col-span-3"
-                                    />
-                                </div>
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="date" className="text-right">
-                                        Date
-                                    </Label>
-                                    <Popover>
-                                        <PopoverTrigger asChild>
-                                            <Button
-                                                variant={"outline"}
-                                                className={cn(
-                                                    "w-[280px] justify-start text-left font-normal",
-                                                    !date && "text-muted-foreground"
-                                                )}
-                                            >
-                                                <CalendarIcon className="mr-2 h-4 w-4" />
-                                                {date ? format(date, "PPP") : <span>Pick a date</span>}
-                                            </Button>
-                                        </PopoverTrigger>
-                                        <PopoverContent className="w-auto p-0">
-                                            <Calendar
-                                                mode="single"
-                                                selected={date}
-                                                onSelect={setDate}
-                                                initialFocus
+                                <div>
+                                    
+                                    <div className="grid grid-cols-1 items-center gap-4">
+                                        <div>
+                                            <Label htmlFor="date" className="text-right">
+                                                Date
+                                            </Label>
+                                            <Popover>
+                                                <PopoverTrigger asChild>
+                                                    <Button
+                                                        variant={"outline"}
+                                                        className={cn(
+                                                            "w-full justify-start text-left font-normal",
+                                                            !date && "text-muted-foreground"
+                                                        )}
+                                                    >
+                                                        <CalendarIcon className="mr-2 h-4 w-4" />
+                                                        {date ? format(date, "PPP") : <span>Pick a date</span>}
+                                                    </Button>
+                                                </PopoverTrigger>
+                                                <PopoverContent className="w-auto p-0">
+                                                    <Calendar
+                                                        mode="single"
+                                                        selected={date}
+                                                        onSelect={setDate}
+                                                        initialFocus
+                                                    />
+                                                </PopoverContent>
+                                            </Popover>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 items-center gap-4">
+                                        <div>
+                                            <Label htmlFor="time" className="text-right">
+                                                Time
+                                            </Label>
+                                            <div className=' flex gap-2' >
+                                                <Input
+                                                    id="time"
+                                                    value={time}
+                                                    onChange={(e) => setTime(e.target.value)}
+                                                    className="col-span-3"
+                                                />
+                                                <DropdownMenu>
+                                                    <DropdownMenuTrigger className="border p-2 rounded-lg">{newStatus}</DropdownMenuTrigger>
+                                                    <DropdownMenuContent>
+                                                        <DropdownMenuLabel>Time of Day</DropdownMenuLabel>
+                                                        <DropdownMenuSeparator />
+                                                        <DropdownMenuItem onClick={() => handleNewStatusChange("AM")}>AM</DropdownMenuItem>
+                                                        <DropdownMenuItem onClick={() => handleNewStatusChange("PM")}>PM</DropdownMenuItem>
+                                                    </DropdownMenuContent>
+                                                </DropdownMenu>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 items-center gap-4">
+                                        <div>
+                                            <Label htmlFor="diagnosis" className="text-right">
+                                                diagnosis
+                                            </Label>
+                                            <Textarea
+                                                id="diagnosis"
+                                                value={diagnosis}
+                                                onChange={(e) => setDiagnosis(e.target.value)}
+                                                className="col-span-3"
                                             />
-                                        </PopoverContent>
-                                    </Popover>
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 items-center gap-4">
+                                        <div>
+                                            <Label htmlFor="prescription" className="text-right">
+                                                prescription
+                                            </Label>
+                                            <Textarea
+                                            id="prescription"
+                                                value={prescription}
+                                                onChange={(e) => setPrescription(e.target.value)}
+                                                className="col-span-3" />
+                                        </div>
+                                    
+                                    </div>
+                                                                </div>
                                 </div>
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="time" className="text-right">
-                                        Time
-                                    </Label>
-                                    <Input
-                                        id="time"
-                                        value={time}
-                                        onChange={(e) => setTime(e.target.value)}
-                                        className="col-span-3"
-                                    />
-                                    <DropdownMenu>
-                                        <DropdownMenuTrigger className="border p-2 rounded-lg">{newStatus}</DropdownMenuTrigger>
-                                        <DropdownMenuContent>
-                                            <DropdownMenuLabel>Time of Day</DropdownMenuLabel>
-                                            <DropdownMenuSeparator />
-                                            <DropdownMenuItem onClick={() => handleNewStatusChange("AM")}>AM</DropdownMenuItem>
-                                            <DropdownMenuItem onClick={() => handleNewStatusChange("PM")}>PM</DropdownMenuItem>
-                                        </DropdownMenuContent>
-                                    </DropdownMenu>
-                                </div>
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="reason" className="text-right">
-                                        diagnosis
-                                    </Label>
-                                    <Textarea
-                                        id="diagnosis"
-                                        value={diagnosis}
-                                        onChange={(e) => setDiagnosis(e.target.value)}
-                                        className="col-span-3"
-                                    />
-                                </div>
-                                <div className="grid grid-cols-4 items-center gap-4">
-                                    <Label htmlFor="reason" className="text-right">
-                                        prescription
-                                    </Label>
-                                    <Textarea 
-                                    id="diagnosis"
-                                        value={prescription}
-                                        onChange={(e) => setPrescription(e.target.value)}
-                                        className="col-span-3" />
-                                   
-                                </div>
-                            </div>
                             <DialogFooter>
                                 <Button type="button" onClick={addConsult}>Save changes</Button>
                             </DialogFooter>
