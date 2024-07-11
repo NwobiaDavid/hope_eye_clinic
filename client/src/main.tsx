@@ -37,7 +37,7 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             <Route path="surgeries" element={<SurgeryPage />} />
             <Route path="tests" element={<TestPage />} />
             <Route path="drug-inventory" element={<DrugInventory />} />
-            {/* <Route path="store-inventory" element={<StoreInventory />} /> */}
+            <Route path="store-inventory" element={<StoreInventory />} />
           </Route>
         </Routes>
       </Router>

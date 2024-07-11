@@ -1,351 +1,277 @@
-import React, { useState } from 'react';
-import { Button } from "@/components/ui/button";
-import { DataTable } from "@/components/ui/data-table"; // Adjust the import path as needed
+import { SetStateAction, useEffect, useState } from 'react';
+import { Button } from "../components/ui/button";
+import { GripHorizontal, Menu, Plus } from "lucide-react";
+import {
+    Table,
+    TableBody,
+    TableCaption,
+    TableCell,
+    TableHead,
+    TableHeader,
+    TableRow,
+} from "../components/ui/table";
+import {
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
+} from "../components/ui/dropdown-menu";
 import {
     Dialog,
     DialogClose,
     DialogContent,
     DialogDescription,
+    DialogFooter,
     DialogHeader,
     DialogTitle,
     DialogTrigger,
-} from "@/components/ui/dialog";
-import { Input } from "@/components/ui/input";
-import { Label } from "@/components/ui/label";
-import { DropdownMenu, DropdownMenuContent, DropdownMenuItem, DropdownMenuLabel, DropdownMenuSeparator, DropdownMenuTrigger } from "@/components/ui/dropdown-menu";
-import { format } from "date-fns";
-import { Calendar as CalendarIcon, Ellipsis, MoreVertical } from "lucide-react";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
-import { Calendar } from "@/components/ui/calendar";
-import { cn } from "@/lib/utils";
+} from "../components/ui/dialog";
+import { Input } from "../components/ui/input";
+import { Label } from "../components/ui/label";
+import axios from 'axios';
+
+interface Item {
+    id: number;
+    name: string;
+    manufacturer: string;
+    amount: number;
+    price: number;
+}
 
 const StoreInventory = () => {
-    const initialData = [
-        { id: "ITEM001", name: "Frame A", type: "Frame", price: "50", quantity: "100", manufacturer: "Company A", dateOfStock: "2024-06-18" },
-        { id: "ITEM002", name: "Frame B", type: "Frame", price: "60", quantity: "150", manufacturer: "Company B", dateOfStock: "2024-06-19" },
-        { id: "ITEM003", name: "Lens A", type: "Lens", price: "30", quantity: "200", manufacturer: "Company C", dateOfStock: "2024-06-20" },
-        { id: "ITEM004", name: "Case A", type: "Case", price: "20", quantity: "50", manufacturer: "Company D", dateOfStock: "2024-06-21" }
-    ];
+    const [data, setData] = useState<item[]>([]);
+    const [newStatus, setNewStatus] = useState("Open");
+    const [selectedItem, setSelectedItem] = useState<Item | null>(null);
+    // const [searchQuery, setSearchQuery] = useState('');
+    // const [loading, setLoading] = useState<boolean>(true);
+    // const [error, setError] = useState<string | null>(null);
+    const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
+    const [selectedDetails, setSelectedDetails] = useState<{ item: Item } | null>(null);
+    const [amount, setAmount] = useState('');
+    const [newName, setNewName] = useState('');
+    const [price, setPrice] = useState('');
+    const [manufacturer, setManufacturer] = useState('');
 
-    const [data, setData] = useState(initialData);
-    const [newName, setNewName] = useState("");
-    const [newType, setNewType] = useState("Frame");
-    const [newPrice, setNewPrice] = useState("");
-    const [newQuantity, setNewQuantity] = useState("");
-    const [newManufacturer, setNewManufacturer] = useState("");
-    const [newDateOfStock, setNewDateOfStock] = useState<Date | null>(null);
-    const [isDialogOpen, setIsDialogOpen] = useState(false);
-    const [editDialogOpen, setEditDialogOpen] = useState(false);
-    const [editItem, setEditItem] = useState<any>(null);
+    useEffect(() => {
+        axios.get('http://localhost:3000/api/items')
+            .then(response => {
+                setData(response.data);
+            })
+            .catch(error => {
+                console.error('Error fetching items:', error);
+            });
+    }, []);
 
-    const handleSave = () => {
-        const newItem = {
-            id: `ITEM${String(data.length + 1).padStart(3, '0')}`,
-            name: newName,
-            type: newType,
-            price: newPrice,
-            quantity: newQuantity,
-            manufacturer: newManufacturer,
-            dateOfStock: newDateOfStock ? format(newDateOfStock, "yyyy-MM-dd") : "",
-        };
-        setData([...data, newItem]);
-        setNewName("");
-        setNewType("Frame");
-        setNewPrice("");
-        setNewQuantity("");
-        setNewManufacturer("");
-        setNewDateOfStock(null);
-        setIsDialogOpen(false);
-    };
-
-    const handleEditSave = () => {
-        const updatedData = data.map(item =>
-            item.id === editItem.id
-                ? {
-                      ...item,
-                      name: newName,
-                      type: newType,
-                      price: newPrice,
-                      quantity: newQuantity,
-                      manufacturer: newManufacturer,
-                      dateOfStock: newDateOfStock ? format(newDateOfStock, "yyyy-MM-dd") : "",
-                  }
-                : item
-        );
-        setData(updatedData);
-        setEditDialogOpen(false);
-    };
-
-    const handleEdit = (item: any) => {
-        setEditItem(item);
-        setNewName(item.name);
-        setNewType(item.type);
-        setNewPrice(item.price);
-        setNewQuantity(item.quantity);
-        setNewManufacturer(item.manufacturer);
-        setNewDateOfStock(new Date(item.dateOfStock));
-        setEditDialogOpen(true);
-    };
-
-    const handleDelete = (id: string) => {
-        const updatedData = data.filter(item => item.id !== id);
-        setData(updatedData);
-    };
-
-    const columns = [
-        { header: "ID", accessorKey: "id" },
-        { header: "Name", accessorKey: "name" },
-        { header: "Type", accessorKey: "type" },
-        { header: "Price", accessorKey: "price" },
-        { header: "Quantity", accessorKey: "quantity" },
-        { header: "Manufacturer", accessorKey: "manufacturer" },
-        { header: "Date of Stock", accessorKey: "dateOfStock" },
-        {
-            header: "Actions",
-            accessorKey: "actions",
-            cell: ({ row }: any) => (
-                <DropdownMenu>
-                    <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" size="icon">
-                            <Ellipsis />
-                        </Button>
-                    </DropdownMenuTrigger>
-                    <DropdownMenuContent>
-                        <DropdownMenuItem onClick={() => handleEdit(row.original)}>Edit</DropdownMenuItem>
-                        <DropdownMenuItem onClick={() => handleDelete(row.original.id)}>Delete</DropdownMenuItem>
-                    </DropdownMenuContent>
-                </DropdownMenu>
-            )
+    const addItem = async () => {
+        if (!amount || !price || !manufacturer || !newName) {
+            return;
         }
-    ];
 
+        const itemData = {
+            amount,
+            price,
+            manufacturer,
+            name: newName,
+        };
+
+        try {
+            if (selectedItem) {
+                // Update existing drug
+                const response = await axios.put(`http://localhost:3000/api/items/${selectedItem.id}`, itemData);
+                setData(prevData => prevData.map(item => item.id === selectedItem.id ? response.data : item));
+            } else {
+                // Add new drug
+                const response = await axios.post('http://localhost:3000/api/items', itemData);
+                setData(prevData => [...prevData, response.data]);
+            }
+            setSelectedItem(null);
+            setAmount('');
+            setPrice('');
+            setNewName('');
+            setManufacturer('');
+        } catch (error) {
+            console.error('Error adding item:', error);
+        }
+    };
+
+    const handleEdit = (item: Item) => {
+        setSelectedItem(item);
+        setAmount(item.amount.toString());
+        setPrice(item.price.toString());
+        setManufacturer(item.manufacturer);
+        setNewName(item.name);
+    };
+
+    const deleteItem = async (id: number) => {
+        try {
+            await axios.delete(`http://localhost:3000/api/items/${id}`);
+            setData(prevData => prevData.filter(item => item.id !== id));
+        } catch (error) {
+            console.error('Error deleting item:', error);
+        }
+    };
+
+    const handleNewStatusChange = (newStatus: SetStateAction<string>) => {
+        setNewStatus(newStatus);
+    };
+
+    const viewDetails = (item: Item) => {
+        setSelectedDetails({ item });
+        setDetailsDialogOpen(true);
+    };
+    
     return (
         <div className="px-6 py-3">
-            <div className='flex flex-col justify-center items-center'>
-                <div className='w-[80%]'>
-                    <div className="flex justify-between py-4 items-center">
-                        <h2 className="py-2 px-4 bg-black text-white rounded-md">Store Inventory</h2>
-                        <Button onClick={() => setIsDialogOpen(true)}>
-                            Add New Item
-                        </Button>
-                    </div>
+        <div className='flex flex-col justify-center items-center'>
+            <div className='w-[80%]'>
+                <div className="flex justify-between py-4 items-center">
+                    <h2 className="py-2 px-4 bg-black text-white rounded-md">Item Inventory</h2>
 
-                    <DataTable data={data} columns={columns} />
-
-                    {isDialogOpen && (
-                        <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>Add a New Item</DialogTitle>
-                                    <DialogClose asChild>
-                                        <Button onClick={() => setIsDialogOpen(false)}>Close</Button>
-                                    </DialogClose>
-                                </DialogHeader>
+                    <Dialog>
+                        <DialogTrigger>
+                            <Button className="flex justify-center">
+                                <Plus /> <span className="ml-2 capitalize">{selectedItem ? 'Edit Store Item' : 'Add Store Item'}</span>
+                            </Button>
+                        </DialogTrigger>
+                        <DialogContent>
+                            <DialogHeader>
+                                <DialogTitle className="capitalize">{selectedItem ? 'Edit Item' : 'Add Item'}</DialogTitle>
                                 <DialogDescription>
-                                    <div className="grid mb-6 grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="item-name" className="text-right">
-                                            Item Name
-                                        </Label>
-                                        <Input
-                                            id="item-name"
-                                            placeholder='Item Name'
-                                            onChange={(e) => setNewName(e.target.value)}
-                                            value={newName}
-                                            className="col-span-2"
-                                        />
-                                    </div>
-                                    <div className="grid mb-6 grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="item-type" className="text-right">
-                                            Type
-                                        </Label>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger className="border p-2 rounded-lg">{newType}</DropdownMenuTrigger>
-                                            <DropdownMenuContent>
-                                                <DropdownMenuLabel>Item Type</DropdownMenuLabel>
-                                                <DropdownMenuSeparator />
-                                                <DropdownMenuItem onClick={() => setNewType("Frame")}>Frame</DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => setNewType("Case")}>Case</DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => setNewType("Lens")}>Lens</DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </div>
-                                    <div className="grid mb-6 grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="item-price" className="text-right">
-                                            Price
-                                        </Label>
-                                        <Input
-                                            id="item-price"
-                                            placeholder='Price'
-                                            onChange={(e) => setNewPrice(e.target.value)}
-                                            value={newPrice}
-                                            className="col-span-2"
-                                        />
-                                    </div>
-                                    <div className="grid mb-6 grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="item-quantity" className="text-right">
-                                            Quantity
-                                        </Label>
-                                        <Input
-                                            id="item-quantity"
-                                            placeholder='Quantity'
-                                            onChange={(e) => setNewQuantity(e.target.value)}
-                                            value={newQuantity}
-                                            className="col-span-2"
-                                        />
-                                    </div>
-                                    <div className="grid mb-6 grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="item-manufacturer" className="text-right">
-                                            Manufacturer
-                                        </Label>
-                                        <Input
-                                            id="item-manufacturer"
-                                            placeholder='Manufacturer'
-                                            onChange={(e) => setNewManufacturer(e.target.value)}
-                                            value={newManufacturer}
-                                            className="col-span-2"
-                                        />
-                                    </div>
-                                    <div className="grid mb-6 grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="date-of-stock" className="text-right">
-                                            Date of Stock
-                                        </Label>
-                                        <Popover>
-                                            <PopoverTrigger asChild>
-                                                <Button
-                                                    variant={"outline"}
-                                                    className={cn(
-                                                        "w-[280px] justify-start text-left font-normal",
-                                                        !newDateOfStock && "text-muted-foreground"
-                                                    )}
-                                                >
-                                                    <CalendarIcon className="mr-2 h-4 w-4" />
-                                                    {newDateOfStock ? format(newDateOfStock, "PPP") : <span>Pick a date</span>}
-                                                </Button>
-                                            </PopoverTrigger>
-                                            <PopoverContent className="w-auto p-0">
-                                                <Calendar
-                                                    mode="single"
-                                                    selected={newDateOfStock}
-                                                    onSelect={setNewDateOfStock}
-                                                    initialFocus
-                                                />
-                                            </PopoverContent>
-                                        </Popover>
-                                    </div>
-                                    <Button onClick={handleSave}>Save</Button>
+                                    This action cannot be undone.
                                 </DialogDescription>
-                            </DialogContent>
-                        </Dialog>
-                    )}
+                            </DialogHeader>
+                            <div className="grid grid-cols-2 gap-4 py-4">
+                                <div>
+                                    <div className="grid grid-cols-1 items-center gap-4">
+                                        <div>
+                                            <Label htmlFor="itemName" className="text-right">
+                                                Item Name
+                                            </Label>
+                                            <Input
+                                                id="itemName"
+                                                onChange={(e) => { setNewName(e.target.value); }}
+                                                value={newName}
+                                                className="col-span-3"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 items-center gap-4">
+                                        <div>
+                                            <Label htmlFor="manu" className="text-right">
+                                                Manufacturer
+                                            </Label>
+                                            <Input
+                                                id="manu"
+                                                value={manufacturer}
+                                                onChange={(e) => setManufacturer(e.target.value)}
+                                                className="col-span-3"
+                                            />
+                                        </div>
+                                    </div>
+                                </div>
+                                <div>
+                                    <div className="grid grid-cols-1 items-center gap-4">
+                                        <div>
+                                            <Label htmlFor="amount" className="text-right">
+                                                Amount
+                                            </Label>
+                                            <Input
+                                                id="amount"
+                                                value={amount}
+                                                onChange={(e) => setAmount(e.target.value)}
+                                                className="col-span-3"
+                                            />
+                                        </div>
+                                    </div>
+                                    <div className="grid grid-cols-1 items-center gap-4">
+                                        <div>
+                                            <Label htmlFor="price" className="text-right">
+                                                Price
+                                            </Label>
+                                            <div className=' flex gap-2'>
+                                                <Input
+                                                    id="price"
+                                                    value={price}
+                                                    onChange={(e) => setPrice(e.target.value)}
+                                                    className="col-span-3"
+                                                />
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <DialogFooter>
+                                <Button type="button" onClick={addItem}>Save changes</Button>
+                            </DialogFooter>
+                        </DialogContent>
+                    </Dialog>
+                </div>
 
-                    {editDialogOpen && (
-                        <Dialog open={editDialogOpen} onOpenChange={setEditDialogOpen}>
-                            <DialogContent>
-                                <DialogHeader>
-                                    <DialogTitle>Edit Item</DialogTitle>
-                                    <DialogClose asChild>
-                                        <Button onClick={() => setEditDialogOpen(false)}>Close</Button>
-                                    </DialogClose>
-                                </DialogHeader>
-                                <DialogDescription>
-                                    <div className="grid mb-6 grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="edit-item-name" className="text-right">
-                                            Item Name
-                                        </Label>
-                                        <Input
-                                            id="edit-item-name"
-                                            placeholder='Item Name'
-                                            onChange={(e) => setNewName(e.target.value)}
-                                            value={newName}
-                                            className="col-span-2"
-                                        />
-                                    </div>
-                                    <div className="grid mb-6 grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="edit-item-type" className="text-right">
-                                            Type
-                                        </Label>
-                                        <DropdownMenu>
-                                            <DropdownMenuTrigger className="border p-2 rounded-lg">{newType}</DropdownMenuTrigger>
-                                            <DropdownMenuContent>
-                                                <DropdownMenuLabel>Item Type</DropdownMenuLabel>
-                                                <DropdownMenuSeparator />
-                                                <DropdownMenuItem onClick={() => setNewType("Frame")}>Frame</DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => setNewType("Case")}>Case</DropdownMenuItem>
-                                                <DropdownMenuItem onClick={() => setNewType("Lens")}>Lens</DropdownMenuItem>
-                                            </DropdownMenuContent>
-                                        </DropdownMenu>
-                                    </div>
-                                    <div className="grid mb-6 grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="edit-item-price" className="text-right">
-                                            Price
-                                        </Label>
-                                        <Input
-                                            id="edit-item-price"
-                                            placeholder='Price'
-                                            onChange={(e) => setNewPrice(e.target.value)}
-                                            value={newPrice}
-                                            className="col-span-2"
-                                        />
-                                    </div>
-                                    <div className="grid mb-6 grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="edit-item-quantity" className="text-right">
-                                            Quantity
-                                        </Label>
-                                        <Input
-                                            id="edit-item-quantity"
-                                            placeholder='Quantity'
-                                            onChange={(e) => setNewQuantity(e.target.value)}
-                                            value={newQuantity}
-                                            className="col-span-2"
-                                        />
-                                    </div>
-                                    <div className="grid mb-6 grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="edit-item-manufacturer" className="text-right">
-                                            Manufacturer
-                                        </Label>
-                                        <Input
-                                            id="edit-item-manufacturer"
-                                            placeholder='Manufacturer'
-                                            onChange={(e) => setNewManufacturer(e.target.value)}
-                                            value={newManufacturer}
-                                            className="col-span-2"
-                                        />
-                                    </div>
-                                    <div className="grid mb-6 grid-cols-4 items-center gap-4">
-                                        <Label htmlFor="edit-date-of-stock" className="text-right">
-                                            Date of Stock
-                                        </Label>
-                                        <Popover>
-                                            <PopoverTrigger asChild>
-                                                <Button
-                                                    variant={"outline"}
-                                                    className={cn(
-                                                        "w-[280px] justify-start text-left font-normal",
-                                                        !newDateOfStock && "text-muted-foreground"
-                                                    )}
-                                                >
-                                                    <CalendarIcon className="mr-2 h-4 w-4" />
-                                                    {newDateOfStock ? format(newDateOfStock, "PPP") : <span>Pick a date</span>}
-                                                </Button>
-                                            </PopoverTrigger>
-                                            <PopoverContent className="w-auto p-0">
-                                                <Calendar
-                                                    mode="single"
-                                                    selected={newDateOfStock}
-                                                    onSelect={setNewDateOfStock}
-                                                    initialFocus
-                                                />
-                                            </PopoverContent>
-                                        </Popover>
-                                    </div>
-                                    <Button onClick={handleEditSave}>Save</Button>
-                                </DialogDescription>
-                            </DialogContent>
-                        </Dialog>
-                    )}
+                <div className='flex justify-center items-center'>
+                    <Table>
+                        <TableCaption>A list of scheduled store items</TableCaption>
+                        <TableHeader>
+                            <TableRow>
+                                <TableHead className="w-[100px]">Item ID</TableHead>
+                                <TableHead>Item Name</TableHead>
+                                <TableHead>Manufacturer</TableHead>
+                                <TableHead>Price</TableHead>
+                                <TableHead>Quantity in stock</TableHead>
+                                <TableHead className="py-2">Actions</TableHead>
+                            </TableRow>
+                        </TableHeader>
+                        <TableBody>
+                            {data.map((item, index) => {
+                                return (
+                                    <TableRow key={index}>
+                                        <TableCell>{item.id}</TableCell>
+                                        <TableCell>{item.name}</TableCell>
+                                        <TableCell>{item.manufacturer}</TableCell>
+                                        <TableCell>{item.price}</TableCell>
+                                        <TableCell>{item.amount}</TableCell>
+                                        <TableCell className="py-2">
+                                            <DropdownMenu>
+                                                <DropdownMenuTrigger><Menu /></DropdownMenuTrigger>
+                                                <DropdownMenuContent>
+                                                    <DropdownMenuLabel>Actions</DropdownMenuLabel>
+                                                    <DropdownMenuSeparator />
+                                                    <DropdownMenuItem onClick={() => handleEdit(item)}>Edit</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => deleteItem(item.id)}>Delete</DropdownMenuItem>
+                                                    <DropdownMenuItem onClick={() => viewDetails(item)}>View Details</DropdownMenuItem>
+                                                </DropdownMenuContent>
+                                            </DropdownMenu>
+                                        </TableCell>
+                                    </TableRow>
+                                );
+                            })}
+                        </TableBody>
+                    </Table>
                 </div>
             </div>
         </div>
+
+        {selectedDetails && (
+            <Dialog open={detailsDialogOpen} onOpenChange={setDetailsDialogOpen}>
+                <DialogContent>
+                    <DialogHeader>
+                        <DialogTitle>Store Item Details</DialogTitle>
+                    </DialogHeader>
+                    <div className="py-4">
+                        <p><strong>Item ID:</strong> {selectedDetails.item.id}</p>
+                        <p><strong>Item Name:</strong> {selectedDetails.item ? `${selectedDetails.item.name} ` : 'Unknown'}</p>
+                        <p><strong>Manufacturer:</strong> {selectedDetails.item.manufacturer}</p>
+                        <p><strong>Price:</strong> {selectedDetails.item.price}</p>
+                        <p><strong>Quantity in Stock:</strong> {selectedDetails.item.amount}</p>
+                    </div>
+                    <DialogFooter>
+                        <Button type="button" onClick={() => setDetailsDialogOpen(false)}>Close</Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+        )}
+    </div>
     );
 };
 
