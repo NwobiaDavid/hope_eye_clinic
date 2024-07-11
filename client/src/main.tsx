@@ -17,6 +17,8 @@ import AppointmentPage from './pages/AppointmentPage.tsx';
 import ConsultationPage from './pages/ConsultationPage.tsx';
 import SurgeryPage from './pages/SurgeryPage.tsx';
 import TestPage from './pages/TestPage.tsx';
+import DrugInventory from './pages/DrugInventory.tsx';
+import StoreInventory from './pages/StoreInventory.tsx';
 
 ReactDOM.createRoot(document.getElementById('root')!).render(
   <React.StrictMode>
@@ -34,6 +36,8 @@ ReactDOM.createRoot(document.getElementById('root')!).render(
             <Route path="consultations" element={<ConsultationPage />} />
             <Route path="surgeries" element={<SurgeryPage />} />
             <Route path="tests" element={<TestPage />} />
+            <Route path="drug-inventory" element={<DrugInventory />} />
+            {/* <Route path="store-inventory" element={<StoreInventory />} /> */}
           </Route>
         </Routes>
       </Router>

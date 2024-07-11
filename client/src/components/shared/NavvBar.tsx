@@ -38,9 +38,6 @@ const NavvBar = () => {
       },{
         link: "/store-inventory",
         label: "store inventory"
-      },{
-        link: "/history",
-        label: "record history"
       }
     ]
     return (
