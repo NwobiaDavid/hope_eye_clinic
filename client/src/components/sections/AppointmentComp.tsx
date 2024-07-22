@@ -238,8 +238,8 @@ const AppointmentComp: React.FC<AppointmentCompProps> = ({ id }) => {
                             <TableHead className="py-2">Doctor</TableHead>
                             <TableHead className="py-2">Date</TableHead>
                             <TableHead className="py-2">Time</TableHead>
-                            <TableHead className="py-2">Reason</TableHead>
-                            <TableHead className="py-2">Actions</TableHead>
+                            <TableHead className="py-2 text-right ">Reason</TableHead>
+                            <TableHead className="py-2 text-right ">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -248,8 +248,8 @@ const AppointmentComp: React.FC<AppointmentCompProps> = ({ id }) => {
                                 <TableCell className="py-2">{appointment.doctor_name}</TableCell>
                                 <TableCell className="py-2">{format(new Date(appointment.appointment_date), 'PPP')}</TableCell>
                                 <TableCell className="py-2">{format(new Date(appointment.appointment_date), 'hh:mm a')}</TableCell>
-                                <TableCell className="py-2">{appointment.reason}</TableCell>
-                                <TableCell className="py-2">
+                                <TableCell className="py-2 text-right ">{appointment.reason}</TableCell>
+                                <TableCell className="py-2 text-right">
                                     {/* <Button onClick={() => handleEdit(appointment)}>Edit</Button>
                                     <Button onClick={() => deleteAppointment(appointment.id)} className="ml-2">Delete</Button> */}
                                     <DropdownMenu>

@@ -115,10 +115,10 @@ const CartComponent = ({id}) => {
     }, [patientId]);
 
     return (
-        <div className='bg-neutral-50 py-3 ' >
+        <div className='bg-orange-50 py-3 ' >
             <h1 className=' p-2 font-semibold text-3xl'>Cart</h1>
             <div className='px-5 py-10' >
-                <h2 className=' text-xl px-2 py-1 bg-neutral-200 rounded-md w-fit ' >Add to Cart</h2>
+                <h2 className=' text-xl px-2 py-1 bg-orange-200 rounded-md w-fit ' >Add to Cart</h2>
                 
                 <div className="flex justify-around p-5 ">
                     <div className='flex w-[40%] flex-col justify-center items-center'>
@@ -130,9 +130,9 @@ const CartComponent = ({id}) => {
                             onChange={handleDrugSearch}
                         />
                         {drugSearchResults.length > 0 && (
-                            <ul className=' text-base w-[50%] bg-neutral-400 mb-2 rounded-md ' >
+                            <ul className=' text-base w-[50%] bg-orange-400 overflow-hidden mb-2 rounded-md ' >
                                 {drugSearchResults.map((drug, index) => (
-                                    <li className=' p-1 hover:font-semibold duration-200 cursor-pointer ' key={index} onClick={() => setDrugName(drug.name)}>
+                                    <li className=' p-1 border-b hover:font-semibold hover:bg-orange-700 hover:text-white duration-200 cursor-pointer ' key={index} onClick={() => setDrugName(drug.name)}>
                                         {drug.name}
                                     </li>
                                 ))}
@@ -157,9 +157,9 @@ const CartComponent = ({id}) => {
                             onChange={handleItemSearch}
                         />
                         {itemSearchResults.length > 0 && (
-                            <ul className=' text-base w-[50%] bg-neutral-400 mb-2 rounded-md ' >
+                            <ul className=' text-base w-[50%] bg-orange-400 mb-2 rounded-md overflow-hidden ' >
                                 {itemSearchResults.map((item, index) => (
-                                    <li className=' p-1 hover:font-semibold duration-200 cursor-pointer ' key={index} onClick={() => setItemName(item.name)}>
+                                    <li className=' p-1 hover:font-semibold  hover:bg-orange-700 hover:text-white duration-200 cursor-pointer ' key={index} onClick={() => setItemName(item.name)}>
                                         {item.name}
                                     </li>
                                 ))}
@@ -177,8 +177,8 @@ const CartComponent = ({id}) => {
                 </div>
             </div>
 
-            <div className=' bg-neutral-200 mx-3 px-3 pt-3 pb-5 rounded-lg ' >
-                <h2 className='  px-2 py-1 bg-neutral-300 rounded-md w-fit   text-xl' >Cart Items</h2>
+            <div className=' bg-orange-200 mx-5 mb-3 px-3 pt-3 pb-5 rounded-lg ' >
+                <h2 className='  px-2 py-1 bg-orange-300 border-orange-500 border rounded-md w-fit   text-xl' >Cart Items</h2>
                 <div className='flex justify-around mb-10 '>
                     <div>
                         <h3 className=' font-semibold ' >Drugs</h3>
@@ -201,13 +201,13 @@ const CartComponent = ({id}) => {
             </div>
 
             <div className='p-3' >
-                <h2 className="px-2 py-1 bg-neutral-200 rounded-md w-fit   text-xl" >Purchases</h2>
+                <h2 className="px-2 py-1 bg-orange-200 rounded-md w-fit   text-xl" >Purchases</h2>
                 <div className="flex justify-around ">
                     <div>
                         <h3 className='font-semibold' >Drugs Bought</h3>
                         <ul>
                             {purchases.drugsBought ? purchases.drugsBought.map((drug, index) => (
-                                <li className=' text-lg ' key={index}>{drug.drug_name} - Quantity: {drug.quantity} - Date: {new Date(drug.purchase_date).toLocaleDateString()}</li>
+                                <li className=' text-lg ' key={index}>{drug.drug_name} <span className="text-white px-1 text-xl font-bold bg-orange-500 rounded-lg "> -</span> Quantity: {drug.quantity} <span className="text-white px-1 text-xl font-bold bg-orange-500 rounded-lg "> -</span> Date: {new Date(drug.purchase_date).toLocaleDateString()}</li>
                             )) : (
                                 <h2 className='text-base capitalize opacity-70' > no drug purchase yet </h2>
                             ) }
@@ -218,7 +218,7 @@ const CartComponent = ({id}) => {
                         <h3  className='font-semibold' >Items Bought</h3>
                         <ul>
                             {purchases.itemsBought ? purchases.itemsBought.map((item, index) => (
-                                <li className=' text-lg ' key={index}>{item.item_name} - Quantity: {item.quantity} - Date: {new Date(item.purchase_date).toLocaleDateString()}</li>
+                                <li className=' text-lg ' key={index}>{item.item_name} <span className="text-white px-1 text-xl font-bold bg-orange-500 rounded-lg "> -</span> Quantity: {item.quantity} <span className="text-white px-1 text-xl font-bold bg-orange-500 rounded-lg "> -</span> Date: {new Date(item.purchase_date).toLocaleDateString()}</li>
                             )) : (
                                 <h2 className='text-base capitalize opacity-70' > no item purchase yet </h2>
                             )}

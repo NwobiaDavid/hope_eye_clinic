@@ -226,7 +226,7 @@ const ConsultationComp: React.FC<ConsultationCompProps> = ({ id }) => {
                             <TableHead className="py-2">Doctor</TableHead>
                             <TableHead className="py-2">Date</TableHead>
                             <TableHead className="py-2">Time</TableHead>
-                            <TableHead className="py-2">Actions</TableHead>
+                            <TableHead className="py-2 text-right ">Actions</TableHead>
                         </TableRow>
                     </TableHeader>
                     <TableBody>
@@ -235,7 +235,7 @@ const ConsultationComp: React.FC<ConsultationCompProps> = ({ id }) => {
                                 <TableCell className="py-2">{consult.doctor_name}</TableCell>
                                 <TableCell className="py-2">{format(new Date(consult.consultation_date), 'PPP')}</TableCell>
                                 <TableCell className="py-2">{format(new Date(consult.consultation_date), 'hh:mm a')}</TableCell>
-                                <TableCell className="py-2">
+                                <TableCell className="py-2 text-right ">
                                     {/* <Button onClick={() => handleEdit(consult)}>Edit</Button>
                                     <Button onClick={() => deleteConsult(consult.id)} className="ml-2">Delete</Button> */}
                                     <DropdownMenu>
