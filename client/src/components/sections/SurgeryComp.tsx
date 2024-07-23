@@ -84,7 +84,6 @@ const SurgeryComp: React.FC<SurgCompProps> = ({ id }) => {
                 setData(prevData => [response.data, ...prevData]);
                 setDocname('');
                 setType('Eye');
-                setDate(null);
                 setTime('');
                 setNewStatus('AM');
             })
@@ -107,7 +106,6 @@ const SurgeryComp: React.FC<SurgCompProps> = ({ id }) => {
             .then(response => {
                 setData(prevData => prevData.map(surg => surg.id === response.data.id ? response.data : surg));
                 setDocname('');
-                setDate(null);
                 setType('');
                 setTime('');
                 setNewStatus('AM');

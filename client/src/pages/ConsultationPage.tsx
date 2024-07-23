@@ -1,6 +1,6 @@
 import { SetStateAction, useEffect, useState } from 'react';
 import { Button } from "../components/ui/button";
-import { GripHorizontal, Menu, Plus } from "lucide-react";
+import { Menu, Plus } from "lucide-react";
 import {
     Table,
     TableBody,
@@ -29,7 +29,6 @@ import {
 } from "../components/ui/popover";
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogDescription,
     DialogFooter,
@@ -39,7 +38,6 @@ import {
 } from "../components/ui/dialog";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 import { Textarea } from '../components/ui/textarea';
 
@@ -70,20 +68,20 @@ const ConsultationPage = () => {
     const [newName, setNewName] = useState("");
     const [newSurname, setNewSurname] = useState("");
     const [newStatus, setNewStatus] = useState("Open");
-    const [date, setDate] = useState<Date | undefined>();
+    const [date, setDate] = useState<Date | undefined>(new Date());
     const [time, setTime] = useState("");
-    const [reason, setReason] = useState("");
+    // const [reason, setReason] = useState("");
     const [selectedConsult, setSelectedConsult] = useState<Consultation | null>(null);
 
     const [diagnosis, setDiagnosis] = useState("")
     const [prescription, setPrescription] = useState("")
 
-    const [searchQuery, setSearchQuery] = useState('');
+    // const [searchQuery, setSearchQuery] = useState('');
     const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
     const [searchResults, setSearchResults] = useState<Patient[]>([]);
     const [patients, setPatients] = useState<Patient[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
+    // const [loading, setLoading] = useState<boolean>(true);
+    // const [error, setError] = useState<string | null>(null);
 
     const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
     const [selectedDetails, setSelectedDetails] = useState<{ consult: Consultation, patient: Patient | undefined } | null>(null);
@@ -93,10 +91,10 @@ const ConsultationPage = () => {
             try {
                 const response = await axios.get('http://localhost:3000/api/patients');
                 setPatients(response.data);
-                setLoading(false);
+                // setLoading(false);
             } catch (err) {
-                setError('Failed to fetch patients');
-                setLoading(false);
+                console.log('Failed to fetch patients');
+                // setLoading(false);
             }
         };
 
@@ -124,7 +122,7 @@ const ConsultationPage = () => {
         if (patients.length > 0) {
             const results = patients.filter(patient => {
                 const name = `${patient?.firstName?.toLowerCase()} ${patient?.lastName?.toLowerCase()}`;
-                return name.includes(searchQuery.toLowerCase());
+                return name.includes(newName.toLowerCase());
             });
             setSearchResults(results);
         }

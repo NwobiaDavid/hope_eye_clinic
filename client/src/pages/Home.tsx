@@ -1,9 +1,9 @@
 import { useState, useEffect } from 'react';
 import { Link, useNavigate } from 'react-router-dom';
 import { Button } from '../components/ui/button';
-import { Printer, Search, User2 } from 'lucide-react';
+import { Printer, User2 } from 'lucide-react';
 // import { patients } from '../../constants';
-import { usePatient } from '../PatientContext';
+// import { usePatient } from '../PatientContext';
 import axios from 'axios'; 
 
 interface Patient {
@@ -23,7 +23,7 @@ const Home = () => {
   const [patients, setPatients] = useState<Patient[]>([]);
   const [loading, setLoading] = useState<boolean>(true);
   const [error, setError] = useState<string | null>(null);
-  const { setSelectedPatient } = usePatient();
+  // const { setSelectedPatient } = usePatient();
   const navigate = useNavigate();
   
   
@@ -56,13 +56,17 @@ const Home = () => {
         <p>Status:</p>
       `;
       const printWindow = window.open('', '_blank');
-      printWindow.document.write(`<html><head><title>Print Form</title></head><body>${formContent}</body></html>`);
-      printWindow.document.close();
-      printWindow.print();
+      if (printWindow) {
+        printWindow.document.write(`<html><head><title>Print Form</title></head><body>${formContent}</body></html>`);
+        printWindow.document.close();
+        printWindow.print();
+      } else {
+        console.error('Failed to open print window');
+      }
     };
   
-    const adminLogin = (patient: Patient) => {
-      setSelectedPatient(patient);
+    const adminLogin = () => {
+      // setSelectedPatient(patient);
       navigate('/dashboard');
     }
     
@@ -83,9 +87,9 @@ const Home = () => {
     };
   
     const handleSelectPatient = (patient: Patient) => {
-      if(patient.name !== "admin"){
-        setSelectedPatient(patient);
-      }
+      // if(patient.firstName !== "admin"){
+      //   setSelectedPatient(patient);
+      // }
       console.log("patient here-- "+JSON.stringify(patient))
       navigate(`/patients/${patient.id}`);
     };
@@ -102,7 +106,7 @@ const Home = () => {
             <Button className="flex mr-2 justify-center" onClick={printForm}>
               <Printer /> <span className="ml-2">Print Reg Form</span>
             </Button>
-            <Button className="flex justify-center" onClick={() => adminLogin({ id: 1, name: "admin", phoneNumber: "null", address: "null", age: 0, gender: "null", status: "null" })}>
+            <Button className="flex justify-center" onClick={() => adminLogin()}>
               <User2 /> <span className="ml-2">Log in as admin</span>
             </Button>
           </div>

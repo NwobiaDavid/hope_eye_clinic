@@ -1,4 +1,4 @@
-import React, { createContext, useState, useContext, ReactNode } from 'react';
+import  { createContext, useState, useContext, ReactNode } from 'react';
 
 interface Appointment {
   id: string;
@@ -11,7 +11,8 @@ interface Appointment {
 
 interface Patient {
   id: number;
-  name: string;
+  firstName: string;
+  lastName: string;
   phoneNumber: string;
   address: string;
   age: number;

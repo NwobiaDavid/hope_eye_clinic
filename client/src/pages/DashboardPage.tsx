@@ -1,8 +1,8 @@
-import React from 'react';
+// import React from 'react';
 import { Link } from "react-router-dom";
 import { Button } from "../components/ui/button";
 import { Printer } from "lucide-react";
-import { usePatient } from '../PatientContext';
+// import { usePatient } from '../PatientContext';
 
 const DashboardPage = () => {
 //   const { selectedPatient } = usePatient();
@@ -52,9 +52,12 @@ const DashboardPage = () => {
       <p>Status:</p>
     `;
     const printWindow = window.open('', '_blank');
-    printWindow.document.write(`<html><head><title>Print Form</title></head><body>${formContent}</body></html>`);
-    printWindow.document.close();
-    printWindow.print();
+    if (printWindow) {
+      printWindow.document.write(`<html><head><title>Print Form</title></head><body>${formContent}</body></html>`);
+      printWindow.document.close();
+      printWindow.print();
+
+    }
   };
 
   return (

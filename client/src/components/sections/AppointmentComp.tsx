@@ -45,7 +45,7 @@ interface AppointmentCompProps {
 
 const AppointmentComp: React.FC<AppointmentCompProps> = ({ id }) => {
     const [docname, setDocname] = useState<string>('');
-    const [date, setDate] = useState<Date | null>(null);
+    const [date, setDate] = useState<Date | undefined>(new Date());
     const [time, setTime] = useState<string>('');
     const [newStatus, setNewStatus] = useState<'AM' | 'PM'>('AM');
     const [reason, setReason] = useState<string>('');
@@ -79,7 +79,6 @@ const AppointmentComp: React.FC<AppointmentCompProps> = ({ id }) => {
             .then(response => {
                 setData(prevData => [response.data, ...prevData]);
                 setDocname('');
-                setDate(null);
                 setTime('');
                 setNewStatus('AM');
                 setReason('');
@@ -103,7 +102,6 @@ const AppointmentComp: React.FC<AppointmentCompProps> = ({ id }) => {
             .then(response => {
                 setData(prevData => prevData.map(appointment => appointment.id === response.data.id ? response.data : appointment));
                 setDocname('');
-                setDate(null);
                 setTime('');
                 setNewStatus('AM');
                 setReason('');

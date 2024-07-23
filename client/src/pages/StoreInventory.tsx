@@ -1,6 +1,6 @@
-import { SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from "../components/ui/button";
-import { GripHorizontal, Menu, Plus } from "lucide-react";
+import {  Menu, Plus } from "lucide-react";
 import {
     Table,
     TableBody,
@@ -20,7 +20,6 @@ import {
 } from "../components/ui/dropdown-menu";
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogDescription,
     DialogFooter,
@@ -41,8 +40,8 @@ interface Item {
 }
 
 const StoreInventory = () => {
-    const [data, setData] = useState<item[]>([]);
-    const [newStatus, setNewStatus] = useState("Open");
+    const [data, setData] = useState<Item[]>([]);
+    // const [newStatus, setNewStatus] = useState("Open");
     const [selectedItem, setSelectedItem] = useState<Item | null>(null);
     // const [searchQuery, setSearchQuery] = useState('');
     // const [loading, setLoading] = useState<boolean>(true);
@@ -113,9 +112,9 @@ const StoreInventory = () => {
         }
     };
 
-    const handleNewStatusChange = (newStatus: SetStateAction<string>) => {
-        setNewStatus(newStatus);
-    };
+    // const handleNewStatusChange = (newStatus: SetStateAction<string>) => {
+    //     setNewStatus(newStatus);
+    // };
 
     const viewDetails = (item: Item) => {
         setSelectedDetails({ item });

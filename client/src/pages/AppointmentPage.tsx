@@ -68,12 +68,12 @@ const AppointmentPage = () => {
     const [reason, setReason] = useState("");
     const [selectedAppointment, setSelectedAppointment] = useState<Appointment | null>(null);
 
-    const [searchQuery, setSearchQuery] = useState('');
+    // const [searchQuery, setSearchQuery] = useState('');
     const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
     const [searchResults, setSearchResults] = useState<Patient[]>([]);
     const [patients, setPatients] = useState<Patient[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
+    // const [loading, setLoading] = useState<boolean>(true);
+    // const [error, setError] = useState<string | null>(null);
 
     const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
     const [selectedDetails, setSelectedDetails] = useState<{ appointment: Appointment, patient: Patient | undefined } | null>(null);
@@ -83,10 +83,10 @@ const AppointmentPage = () => {
             try {
                 const response = await axios.get('http://localhost:3000/api/patients');
                 setPatients(response.data);
-                setLoading(false);
+                // setLoading(false);
             } catch (err) {
-                setError('Failed to fetch patients');
-                setLoading(false);
+                console.log('Failed to fetch patients');
+                // setLoading(false);
             }
         };
 
@@ -114,7 +114,7 @@ const AppointmentPage = () => {
         if (patients.length > 0) {
             const results = patients.filter(patient => {
                 const name = `${patient?.firstName?.toLowerCase()} ${patient?.lastName?.toLowerCase()}`;
-                return name.includes(searchQuery.toLowerCase());
+                return name.includes(newName.toLowerCase());
             });
             setSearchResults(results);
         }

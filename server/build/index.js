@@ -7,7 +7,6 @@ const AppointmentRouter  = require('./routes/AppointmentRoutes');
 const TestRouter  = require('./routes/TestRoutes');
 const SurgRouter  = require('./routes/SurgRoutes');
 const CartRouter  = require('./routes/Cart');
-const path = require('path');
 
 const app = express();
 const port = 3000;
@@ -51,10 +50,10 @@ app.use('/api', PatientsRouter, ConsultationsRouter,SurgRouter, AppointmentRoute
 
 
 //production path
-// app.use(express.static(path.join(__dirname, '../../client/dist')))
-// app.get('*', (req, res)=>
-//     res.sendFile(path.join(__dirname, '../../client/dist/index.html'))
-// )
+app.use(express.static(path.join(__dirname, '../../client/dist')))
+app.get('*', (req, res)=>
+    res.sendFile(path.join(__dirname, '../../client/dist/index.html'))
+)
 
 app.listen(port, () => {
     console.log(`Server running at http://localhost:${port}...`);

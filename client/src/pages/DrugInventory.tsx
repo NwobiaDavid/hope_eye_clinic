@@ -1,6 +1,6 @@
-import { SetStateAction, useEffect, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { Button } from "../components/ui/button";
-import { GripHorizontal, Menu, Plus } from "lucide-react";
+import { Menu, Plus } from "lucide-react";
 import {
     Table,
     TableBody,
@@ -20,7 +20,6 @@ import {
 } from "../components/ui/dropdown-menu";
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogDescription,
     DialogFooter,
@@ -30,9 +29,9 @@ import {
 } from "../components/ui/dialog";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Link } from 'react-router-dom';
+// import { Link } from 'react-router-dom';
 import axios from 'axios';
-import { Textarea } from '../components/ui/textarea';
+// import { Textarea } from '../components/ui/textarea';
 
 interface Drug {
     id: number;
@@ -44,11 +43,11 @@ interface Drug {
 
 const DrugInventory = () => {
     const [data, setData] = useState<Drug[]>([]);
-    const [newStatus, setNewStatus] = useState("Open");
+    // const [newStatus, setNewStatus] = useState("Open");
     const [selectedDrug, setSelectedDrug] = useState<Drug | null>(null);
-    const [searchQuery, setSearchQuery] = useState('');
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
+    // const [searchQuery, setSearchQuery] = useState('');
+    // const [loading, setLoading] = useState<boolean>(true);
+    // const [error, setError] = useState<string | null>(null);
     const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
     const [selectedDetails, setSelectedDetails] = useState<{ drug: Drug } | null>(null);
     const [amount, setAmount] = useState('');
@@ -115,9 +114,9 @@ const DrugInventory = () => {
         }
     };
 
-    const handleNewStatusChange = (newStatus: SetStateAction<string>) => {
-        setNewStatus(newStatus);
-    };
+    // const handleNewStatusChange = (newStatus: SetStateAction<string>) => {
+    //     setNewStatus(newStatus);
+    // };
 
     const viewDetails = (drug: Drug) => {
         setSelectedDetails({ drug });

@@ -1,10 +1,11 @@
 {
   "name": "server",
   "version": "1.0.0",
-  "main": "index.js",
+ "main": "build/index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "start": "nodemon src/index.js"
+    "build": "mkdir -p build && cp -r src/* build/",
+    "start": "node build/index.js",
+    "dev": "nodemon src/index.js"
   },
   "keywords": [],
   "author": "",
@@ -15,6 +16,7 @@
     "express": "^4.19.2",
     "mysql": "^2.18.1",
     "mysql2": "^3.10.2",
-    "sequelize": "^6.37.3"
+    "sequelize": "^6.37.3",
+    "nodemon": "^2.0.0"
   }
 }

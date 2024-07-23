@@ -1,6 +1,6 @@
 import { SetStateAction, useEffect, useState } from 'react';
 import { Button } from "../components/ui/button";
-import { GripHorizontal, Menu, Plus } from "lucide-react";
+import { Menu, Plus } from "lucide-react";
 import {
     Table,
     TableBody,
@@ -29,7 +29,6 @@ import {
 } from "../components/ui/popover";
 import {
     Dialog,
-    DialogClose,
     DialogContent,
     DialogDescription,
     DialogFooter,
@@ -39,7 +38,6 @@ import {
 } from "../components/ui/dialog";
 import { Input } from "../components/ui/input";
 import { Label } from "../components/ui/label";
-import { Link } from 'react-router-dom';
 import axios from 'axios';
 
 
@@ -55,7 +53,7 @@ interface Patient {
 }
 
 interface Surg {
-    surgery_date: string ;
+    surgery_date: string;
     patient_id: number;
     id: number;
     doctor_name: string;
@@ -74,32 +72,25 @@ const SurgeryPage = () => {
 
     const [type, setType] = useState("")
 
-    const [searchQuery, setSearchQuery] = useState('');
     const [selectedPatient, setSelectedPatient] = useState<Patient | null>(null);
     const [searchResults, setSearchResults] = useState<Patient[]>([]);
     const [patients, setPatients] = useState<Patient[]>([]);
-    const [loading, setLoading] = useState<boolean>(true);
-    const [error, setError] = useState<string | null>(null);
 
     const [detailsDialogOpen, setDetailsDialogOpen] = useState(false);
     const [selectedDetails, setSelectedDetails] = useState<{ surg: Surg, patient: Patient | undefined } | null>(null);
-
 
     useEffect(() => {
         const fetchPatients = async () => {
             try {
                 const response = await axios.get('http://localhost:3000/api/patients');
                 setPatients(response.data);
-                setLoading(false);
             } catch (err) {
-                setError('Failed to fetch patients');
-                setLoading(false);
+                console.log('Failed to fetch patients');
             }
         };
 
         fetchPatients();
     }, []);
-
 
     useEffect(() => {
         axios.get('http://localhost:3000/api/Surgeries')
@@ -117,14 +108,11 @@ const SurgeryPage = () => {
         setNewName(name);
     };
 
-
-
     const handleSearch = () => {
-        // event.preventDefault();
         if (patients.length > 0) {
             const results = patients.filter(patient => {
                 const name = `${patient?.firstName?.toLowerCase()} ${patient?.lastName?.toLowerCase()}`;
-                return name.includes(searchQuery.toLowerCase());
+                return name.includes(newName.toLowerCase());
             });
             setSearchResults(results);
         }
@@ -163,7 +151,7 @@ const SurgeryPage = () => {
         setDate(new Date(surg.surgery_date));
         setTime(format(new Date(surg.surgery_date), 'HH:mm'));
         setNewStatus(new Date(surg.surgery_date).getHours() < 12 ? 'AM' : 'PM');
-        setType(surg.type)
+        setType(surg.type);
     };
 
     const deleteSurg = async (id: number) => {
@@ -184,7 +172,6 @@ const SurgeryPage = () => {
         setSelectedDetails({ surg, patient });
         setDetailsDialogOpen(true);
     };
-
 
     return (
         <div className="px-6 py-3">
@@ -220,9 +207,9 @@ const SurgeryPage = () => {
                                                     className="col-span-3"
                                                 />
                                             </div>
-                                            <div className="w-full " >
+                                            <div className="w-full">
                                                 {searchResults && (
-                                                    <div className="mt-4 w-full ">
+                                                    <div className="mt-4 w-full">
                                                         {searchResults.length > 0 ? (
                                                             <div>
                                                                 {searchResults.map((patient) => (
@@ -253,7 +240,6 @@ const SurgeryPage = () => {
                                         </div>
                                     </div>
                                     <div>
-
                                         <div className="grid grid-cols-1 items-center gap-4">
                                             <div>
                                                 <Label htmlFor="date" className="text-right">
@@ -288,7 +274,7 @@ const SurgeryPage = () => {
                                                 <Label htmlFor="time" className="text-right">
                                                     Time
                                                 </Label>
-                                                <div className=' flex gap-2' >
+                                                <div className='flex gap-2'>
                                                     <Input
                                                         id="time"
                                                         value={time}
@@ -309,18 +295,17 @@ const SurgeryPage = () => {
                                         </div>
                                         <div className="grid grid-cols-1 items-center gap-4">
                                             <div>
-                                                <Label htmlFor="reason" className="text-right">
-                                                    type
+                                                <Label htmlFor="type" className="text-right">
+                                                    Type
                                                 </Label>
                                                 <Input
-                                                    id="diagnosis"
+                                                    id="type"
                                                     value={type}
                                                     onChange={(e) => setType(e.target.value)}
                                                     className="col-span-3"
                                                 />
                                             </div>
                                         </div>
-
                                     </div>
                                 </div>
                                 <DialogFooter>
@@ -388,9 +373,8 @@ const SurgeryPage = () => {
                             <p><strong>Patient Phone Number:</strong> {selectedDetails.patient ? selectedDetails.patient.phoneNumber : 'Unknown'}</p>
                             <p><strong>Doctor Name:</strong> {selectedDetails.surg.doctor_name}</p>
                             <p><strong>Type:</strong> {selectedDetails.surg.type}</p>
-                            <p><strong>Date:</strong> {format(new Date(selectedDetails.surg.surgery_data), 'PPP')}</p>
-                            <p><strong>Time:</strong> {format(new Date(selectedDetails.surg.surgery_data), 'hh:mm a')}</p>
-
+                            <p><strong>Date:</strong> {format(new Date(selectedDetails.surg.surgery_date), 'PPP')}</p>
+                            <p><strong>Time:</strong> {format(new Date(selectedDetails.surg.surgery_date), 'hh:mm a')}</p>
                         </div>
                         <DialogFooter>
                             <Button type="button" onClick={() => setDetailsDialogOpen(false)}>Close</Button>

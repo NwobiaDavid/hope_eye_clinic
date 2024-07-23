@@ -83,7 +83,6 @@ const TestComp: React.FC<TestCompProps> = ({id}) => {
             .then(response => {
                 setData(prevData => [response.data, ...prevData]);
                 setDocname('');
-                setDate(null);
                 setTime('');
                 setNewStatus('AM');
             })
@@ -106,7 +105,6 @@ const TestComp: React.FC<TestCompProps> = ({id}) => {
             .then(response => {
                 setData(prevData => prevData.map(test=> test.id === response.data.id ? response.data : test));
                 setDocname('');
-                setDate(null);
                 setTime('');
                 setNewStatus('AM');
                 setSelectedTest(null);

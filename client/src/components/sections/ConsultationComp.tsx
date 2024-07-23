@@ -80,7 +80,6 @@ const ConsultationComp: React.FC<ConsultationCompProps> = ({ id }) => {
             .then(response => {
                 setData(prevData => [response.data, ...prevData]);
                 setDocname('');
-                setDate(null);
                 setTime('');
                 setNewStatus('AM');
             })
@@ -104,7 +103,6 @@ const ConsultationComp: React.FC<ConsultationCompProps> = ({ id }) => {
             .then(response => {
                 setData(prevData => prevData.map(consult => consult.id === response.data.id ? response.data : consult));
                 setDocname('');
-                setDate(null);
                 setTime('');
                 setNewStatus('AM');
                 setSelectedConsult(null);

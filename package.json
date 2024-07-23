@@ -1,0 +1,29 @@
+{
+  "name": "three",
+  "version": "1.0.0",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "dev": "concurrently \"npm run dev --prefix server\" \"npm run dev --prefix client\"",
+    "build": "cd server && npm --force install && npm run build && cd ../client && npm install && npm run build",
+    "start": "node server/build/index.js",
+    "pkg": " pkg . --targets node14-win-x64 --out-dir dist"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "concurrently": "^8.2.2"
+  },
+  "bin": "server/build/index.js",
+  "pkg": {
+    "scripts": [
+      "server/**/*",
+      "client/dist/**/*"
+    ],
+    "assets": [
+      "client/dist/**/*"
+    ]
+  }
+}
